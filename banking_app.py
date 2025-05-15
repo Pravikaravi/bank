@@ -1,6 +1,5 @@
 import os
 
-
 def generate_id(prefix, filename):
     """
     Generate a new ID by finding the highest existing ID + 1
@@ -135,7 +134,7 @@ def get_account_balance(account_id):
     with open("Accounts.txt", "r") as file:
         for line in file:
             parts = [p.strip() for p in line.split("|")]
-            if len(parts) >= 4 and parts[0] == account_id:
+            if len(parts) == 4 and parts[0] == account_id:
                 return float(parts[3])
     return None
 
@@ -148,7 +147,7 @@ def update_account_balance(account_id, new_balance):
         with open("Accounts.txt", "r") as file:
             for line in file:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[0] == account_id:
+                if len(parts) == 4 and parts[0] == account_id:
                     line = f"{account_id:<10}| {parts[1]:<10}| {parts[2]:<10}| {new_balance:<10.2f}\n"
                     found = True
                 lines.append(line)
@@ -171,7 +170,7 @@ def get_user_accounts(user_id):
         with open("Accounts.txt", "r") as file:
             for line in file:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[1] == user_id:
+                if len(parts) == 4 and parts[1] == user_id:
                     accounts.append({
                         'account_id': parts[0],
                         'balance': float(parts[3])
@@ -185,7 +184,7 @@ def get_transaction_history(account_id):
         with open("Transactions.txt", "r") as file:
             for line in file:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[0] == account_id:
+                if len(parts) == 4 and parts[0] == account_id:
                     transactions.append({
                         'type': parts[1],
                         'amount': float(parts[2]),
@@ -251,7 +250,7 @@ def delete_customer(user_id=None):
         with open("Users.txt", "r") as file:
             for line in file:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[0] == user_id:
+                if len(parts) == 4 and parts[0] == user_id:
                     user_exists = True
                     user_name = parts[1]
                     break
@@ -286,7 +285,7 @@ def delete_customer(user_id=None):
         with open("Users.txt", "w") as file:
             for line in lines:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[0] == user_id:
+                if len(parts) == 4 and parts[0] == user_id:
                     user_found = True
                 else:
                     file.write(line)
@@ -299,7 +298,7 @@ def delete_customer(user_id=None):
         with open("Customers.txt", "w") as file:
             for line in lines:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 3 and parts[2] == user_id:
+                if len(parts) == 3 and parts[2] == user_id:
                     customer_found = True
                 else:
                     file.write(line)
@@ -312,7 +311,7 @@ def delete_customer(user_id=None):
         with open("Accounts.txt", "w") as file:
             for line in lines:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[1] == user_id:
+                if len(parts) == 4 and parts[1] == user_id:
                     account_ids.append(parts[0])
                     account_found = True
                 else:
@@ -326,7 +325,7 @@ def delete_customer(user_id=None):
         with open("Transactions.txt", "w") as file:
             for line in lines:
                 parts = [p.strip() for p in line.split("|")]
-                if len(parts) >= 4 and parts[0] not in account_ids:
+                if len(parts) == 4 and parts[0] not in account_ids:
                     file.write(line)
     
     # Result message
@@ -359,7 +358,7 @@ def view_all_balances():
     with open("Accounts.txt", "r") as file:
         for line in file:
             parts = [p.strip() for p in line.split("|")]
-            if len(parts) >= 4:
+            if len(parts) == 4:
                 account_id = parts[0]
                 user_id = parts[1]
                 balance = parts[3]
@@ -507,7 +506,7 @@ def update_password_in_file(user_id, new_pw):
     with open("Users.txt", "r") as file:
         for line in file:
             parts = [p.strip() for p in line.split("|")]
-            if len(parts) >= 4 and parts[0] == user_id:
+            if len(parts) == 4 and parts[0] == user_id:
                 # Update the password (store as plaintext)
                 line = f"{parts[0]:<10}| {parts[1]:<7}| {new_pw:<12}| {parts[3]}\n"
                 updated = True
@@ -683,6 +682,8 @@ def user_panel(user_id):
                 change_password(user_id)
             elif choice == 8:
                 break
+            elif choice == 9:
+                show_current_date()
             else : 
                 print("Invalid choice!")
         except ValueError:
