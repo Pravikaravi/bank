@@ -1,43 +1,6 @@
 import os
 import datetime
 
-#==========================ENHANCEMENTS===========================================
-
-def show_current_date():
-    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    print(f"Current Date : {current_date}")
-
-
-def get_username(u_id):
-    if os.path.exists("Users.txt"):
-        with open("Users.txt", "r") as file:
-            for line in file:
-                parts = [p.strip() for p in line.split("|")]
-                if len(parts) == 4 and parts[0] == u_id:
-                    return( parts[1] ) # Return the name
-    return None  
-
-def count_customers_from_file(filename="customers.txt"):
-    with open(filename, "r") as file:
-        return sum(1 for line in file if line.strip())
-    
-def count_transactions(account_id):
-    """Count all transactions for a specific account"""
-    if not os.path.exists("Transactions.txt"):
-        return 0
-    
-    count = 0
-    with open("Transactions.txt", "r") as file:
-        for line in file:
-            parts = [p.strip() for p in line.split("|")]
-            if len(parts) >= 4 and parts[0] == account_id:
-                count += 1
-    return count
-
-
-#=================================================================================
-
-
 def generate_id(prefix, filename):
     """
     Generate a new ID by finding the highest existing ID + 1
@@ -165,7 +128,9 @@ def generate_account_id():
 
 def create_account_file(account_id, user_id, customer_id, balance):
     with open("Accounts.txt", "a") as file:
-        file.write(f"{account_id:<10}| {user_id:<10}| {customer_id:<10}| {balance:<10.2f}\n")
+        num = int(''.join(filter(str.isdigit, account_id)))
+        if num >=0:                                                                      ## CHECK ACCOUNT ID POSITIVE
+            file.write(f"{account_id:<10}| {user_id:<10}| {customer_id:<10}| {balance:<10.2f}\n")
 
 
 def get_account_balance(account_id):
@@ -558,6 +523,99 @@ def update_password_in_file(user_id, new_pw):
         return True
     return False
 
+
+#==========================ENHANCEMENTS===========================================
+
+def show_current_date():
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    print(f"Current Date : {current_date}")
+
+
+def get_username(u_id):
+    if os.path.exists("Users.txt"):
+        with open("Users.txt", "r") as file:
+            for line in file:
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) == 4 and parts[0] == u_id:
+                    return( parts[1] ) # Return the name
+    return None  
+
+def count_customers_from_file(filename="customers.txt"):
+    with open(filename, "r") as file:
+        return sum(1 for line in file if line.strip())
+    
+def count_transactions(account_id):
+    """Count all transactions for a specific account"""
+    if not os.path.exists("Transactions.txt"):
+        return 0
+    
+    count = 0
+    with open("Transactions.txt", "r") as file:
+        for line in file:
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) == 4 and parts[0] == account_id:
+                count += 1
+    return count
+
+# def Account_number_positive_check():
+#     if os.path.exists("Accounts.txt"):
+#         with open("Accounts.txt", "r") as file:
+#             for line in file:
+#                 parts = [p.strip() for p in line.split("|")]
+#                 if len(parts) == 4 and parts[0] == account_id:
+#                     Ac_id = parts[0]
+#                     num = int(''.join(filter(str.isdigit, Ac_id)))
+#                     if num >= 0:
+#                         return True
+#                     else:
+#                         return False
+
+
+# def Check_username_availability(name):
+#     if os.path.exists("Users.txt"):
+#         with open("Users.txt","r") as file:
+#             for line in file:
+#                 parts = [p.strip() for p in line.split("|")]
+#                 if len(parts) == 4:
+#                     Av_name = parts[1]
+#                     if Av_name == name:
+#                         print("User name already exists")
+#                     else:
+#                         break
+
+
+def count_deposit_transcations(account_id):
+    """Count all transactions for a specific account"""
+    if not os.path.exists("Transactions.txt"):
+        return 0
+    
+    count_Depo = 0
+    with open("Transactions.txt", "r") as file:
+        for line in file:
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) == 4 and parts[0] == account_id and parts[1] == "DEPOSIT":
+                count_Depo += 1
+            elif len(parts) == 4 and parts[0] == account_id and parts[1] == "INITIAL DEPOSIT":
+                count_Depo += 1
+    return count_Depo
+
+
+
+def count_withdraw_transcations(account_id):
+    """Count all transactions for a specific account"""
+    if not os.path.exists("Transactions.txt"):
+        return 0
+    
+    count_With = 0
+    with open("Transactions.txt", "r") as file:
+        for line in file:
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) == 4 and parts[0] == account_id and parts[1] == "WITHDRAWAL":
+                count_With += 1
+    return count_With
+
+#=================================================================================
+
 # Admin dashboard
 def admin_dashboard():
     while True:
@@ -571,14 +629,16 @@ def admin_dashboard():
         print("7. Deposit money")
         print("8. Money transfer")
         print("9. View all transactions")
-        print("10. Exit admin dashboard")
-        print("11. Total Customer count")
-        print("12. View Transaction Count")
+        print("10. Total Customer count")
+        # print("11. View Transaction Count")
+        print("11. View Transaction Type Summary")
+        print("12. Exit admin dashboard")
 
         try:
             choice = int(input("Enter your choice: "))
             if choice == 1:
                 name = input("Enter customer name: ")
+                # Check_username_availability(name)
                 password = input("Set temporary password: ")
                 balance = float(input("Enter initial balance: "))
                 account_id = generate_id('AC', "Accounts.txt")
@@ -588,6 +648,7 @@ def admin_dashboard():
                 create_customer_file(customer_id, name, user_id)
                 create_account_file(account_id, user_id, customer_id, balance)
                 record_transaction(account_id, "INITIAL DEPOSIT", balance, balance)
+                
             elif choice == 2:
                 show_all_customers()
             elif choice == 3:
@@ -666,14 +727,22 @@ def admin_dashboard():
                 account_id = input("Enter account ID to view transactions: ")
                 view_transaction_history(account_id)
             elif choice == 10:
-                break
-            elif choice == 11:
                 num = count_customers_from_file()
                 print(f"Total Customer : {num}")
-            elif choice == 12:  # Transaction Count
+            # elif choice == 11:  # Transaction Count
+            #     account_id = input("Enter account ID: ")
+            #     count = count_transactions(account_id)
+            #     print(f"\nAccount {account_id} has {count} transactions")
+            elif choice == 11:
                 account_id = input("Enter account ID: ")
                 count = count_transactions(account_id)
                 print(f"\nAccount {account_id} has {count} transactions")
+                count_Depo = count_deposit_transcations(account_id)
+                count_With = count_withdraw_transcations(account_id)
+                print(f"Number of Deposits : {count_Depo}")
+                print(f"Number of Withdrawals : {count_With}")
+            elif choice == 12:
+                break
             else:
                 print("Invalid option!")
         except ValueError:
@@ -698,22 +767,12 @@ def user_panel(user_id):
         print("5. Money transfer")
         print("6. View transaction history")
         print("7. Change Password")
-        print("8. Exit")
-        print("9. Show current date")
+        print("8. Show Current Date")
+        # print("9. Check AC number is positive")
+        print("9. Exit")
 
         try:
             choice = int(input("Enter your choice: "))
-            
-            if account_id is None and choice in [2,3,4,5,6]:
-                print("You have multiple accounts. Please select an account:")
-                for i, acc in enumerate(accounts, 1):
-                    print(f"{i}. Account {acc['account_id']} (Balance: {acc['balance']:.2f})")
-                acc_choice = int(input("Select account (1-{}): ".format(len(accounts))))
-                if 1 <= acc_choice <= len(accounts):
-                    account_id = accounts[acc_choice-1]['account_id']
-                else:
-                    print("Invalid selection.")
-                    continue
             
             if choice == 1:
                 view_user_details(user_id)
@@ -731,13 +790,16 @@ def user_panel(user_id):
             elif choice == 7:  
                 change_password(user_id)
             elif choice == 8:
-                break
-            elif choice == 9:
                 show_current_date()
+            # elif choice == 9:
+            #     Account_number_positive_check()
+            elif choice == 9:
+                break
             else : 
                 print("Invalid choice!")
         except ValueError:
             print("Enter numbers only!")
+
 
 
 
