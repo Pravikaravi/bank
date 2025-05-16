@@ -1,5 +1,6 @@
 import os
 
+
 def generate_id(prefix, filename):
     """
     Generate a new ID by finding the highest existing ID + 1
@@ -682,8 +683,6 @@ def user_panel(user_id):
                 change_password(user_id)
             elif choice == 8:
                 break
-            elif choice == 9:
-                show_current_date()
             else : 
                 print("Invalid choice!")
         except ValueError:
