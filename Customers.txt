@@ -1,3 +1,0 @@
-C00001    | Pravi       | U00001      
-C00002    | dilu        | U00002      
-C00003    | Pravika Ravi| U00003      
