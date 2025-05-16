@@ -21,7 +21,18 @@ def count_customers_from_file(filename="customers.txt"):
     with open(filename, "r") as file:
         return sum(1 for line in file if line.strip())
     
-
+def count_transactions(account_id):
+    """Count all transactions for a specific account"""
+    if not os.path.exists("Transactions.txt"):
+        return 0
+    
+    count = 0
+    with open("Transactions.txt", "r") as file:
+        for line in file:
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) >= 4 and parts[0] == account_id:
+                count += 1
+    return count
 
 
 #=================================================================================
@@ -562,6 +573,7 @@ def admin_dashboard():
         print("9. View all transactions")
         print("10. Exit admin dashboard")
         print("11. Total Customer count")
+        print("12. View Transaction Count")
 
         try:
             choice = int(input("Enter your choice: "))
@@ -658,6 +670,10 @@ def admin_dashboard():
             elif choice == 11:
                 num = count_customers_from_file()
                 print(f"Total Customer : {num}")
+            elif choice == 12:  # Transaction Count
+                account_id = input("Enter account ID: ")
+                count = count_transactions(account_id)
+                print(f"\nAccount {account_id} has {count} transactions")
             else:
                 print("Invalid option!")
         except ValueError:
