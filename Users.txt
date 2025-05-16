@@ -1,0 +1,4 @@
+U00000    | Admin  | Admin@123   | admin
+U00001    | Pravi  | 1234        | user
+U00002    | Dilu   | 12345       | user
+U00003    | Pravika Ravi| 123         | user

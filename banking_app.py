@@ -1,4 +1,30 @@
 import os
+import datetime
+
+#==========================ENHANCEMENTS===========================================
+
+def show_current_date():
+    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+    print(f"Current Date : {current_date}")
+
+
+def get_username(u_id):
+    if os.path.exists("Users.txt"):
+        with open("Users.txt", "r") as file:
+            for line in file:
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) == 4 and parts[0] == u_id:
+                    return( parts[1] ) # Return the name
+    return None  
+
+def count_customers_from_file(filename="customers.txt"):
+    with open(filename, "r") as file:
+        return sum(1 for line in file if line.strip())
+    
+
+
+
+#=================================================================================
 
 
 def generate_id(prefix, filename):
@@ -74,6 +100,7 @@ def generate_user_id():
 
 
 def create_customer(user_id, name, password, role="user"):
+    name = name.title()     ## TITLE CASE
     with open("Users.txt", "a") as file:
         file.write(f"{user_id:<10}| {name:<7}| {password:<12}| {role}\n")
     print("Customer created successfully!")
@@ -99,6 +126,7 @@ def generate_customer_id():
 
 
 def create_customer_file(customer_id, name, user_id):
+    name = name.title()
     with open("Customers.txt", "a") as file:
         file.write(f"{customer_id:<10}| {name:<12}| {user_id:<12}\n")
 
@@ -533,6 +561,7 @@ def admin_dashboard():
         print("8. Money transfer")
         print("9. View all transactions")
         print("10. Exit admin dashboard")
+        print("11. Total Customer count")
 
         try:
             choice = int(input("Enter your choice: "))
@@ -626,6 +655,9 @@ def admin_dashboard():
                 view_transaction_history(account_id)
             elif choice == 10:
                 break
+            elif choice == 11:
+                num = count_customers_from_file()
+                print(f"Total Customer : {num}")
             else:
                 print("Invalid option!")
         except ValueError:
@@ -651,6 +683,7 @@ def user_panel(user_id):
         print("6. View transaction history")
         print("7. Change Password")
         print("8. Exit")
+        print("9. Show current date")
 
         try:
             choice = int(input("Enter your choice: "))
@@ -683,6 +716,8 @@ def user_panel(user_id):
                 change_password(user_id)
             elif choice == 8:
                 break
+            elif choice == 9:
+                show_current_date()
             else : 
                 print("Invalid choice!")
         except ValueError:
@@ -719,7 +754,8 @@ while True:
                 pw = input("Enter your password: ")
                 role = verify_login(u_id, pw)
                 if role == "user":
-                    print(f"\nWelcome User {u_id}!")
+                    name = get_username(u_id)
+                    print(f"\nWelcome {name}!")
                     user_panel(u_id)
                 elif role == "admin":
                     print("This is an admin account. Use Admin Login.")
