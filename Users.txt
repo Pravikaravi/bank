@@ -1,9 +1,0 @@
-U00000    | Admin  | Admin@123   | admin
-U00001    | Pravika Ravi| 1234        | user
-U00002    | Pravika Ravi| 1234        | user
-U00003    | Ravi   | 123         | user
-U00004    | Ravi   | 1234        | user
-U00005    | Ravi   | 12345       | user
-U00006    | Ravi   | abcd        | user
-U00007    | Thiru  | 123         | user
-U00008    | Baby   | 123         | user

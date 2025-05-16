@@ -1,8 +1,0 @@
-C00001    | Pravika Ravi| U00001      
-C00002    | Pravika Ravi| U00002      
-C00003    | Ravi        | U00003      
-C00004    | Ravi        | U00004      
-C00005    | Ravi        | U00005      
-C00006    | Ravi        | U00006      
-C00007    | Thiru       | U00007      
-C00008    | Baby        | U00008      
